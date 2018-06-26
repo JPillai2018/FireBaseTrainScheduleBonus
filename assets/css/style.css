@@ -1,0 +1,202 @@
+body{
+    background-color: rgb(224, 224, 224);
+} 
+.container{
+    width: 980px;
+    padding-left:   0px;
+
+}
+.footer{
+    text-align: center;
+}
+
+.jumbotron{
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: scroll;
+    background-position: 0% 50%;
+    height: 350px;
+    text-align: center;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    background: linear-gradient(to top,  rgb(65, 7, 226) , rgb(28, 175, 243)); 
+    /* color: rgb(50, 10, 228); */
+    color:white;
+    padding-left: 0px;
+    padding-right: 0px;
+    margin: 0px;
+}
+
+
+.panel-heading{
+    text-align: center;
+    font-size: 2ch;
+    width: 100%;
+    margin: 0px;
+    padding: 0px;
+    height: 25px;
+    background: linear-gradient(to top, rgb(43, 3, 153) , rgb(20, 163, 230));
+}
+.panel-body{
+    padding: 0px;
+    overflow: auto;
+    max-height: 160px; 
+}
+
+.panel-body th{
+    font-style: normal;
+    font-weight: normal;
+    font-size: 2ch;
+}
+.panel-title{
+    height: 30px;
+    margin: 0px;
+    padding: 0px;
+    font-size: 20px;
+    background-color:  rgb(66, 3, 241);
+    background: linear-gradient(to top, rgb(47, 2, 170) , rgb(20, 163, 230));
+}
+thead{
+    height: 30px;
+    margin: 0px;
+    padding: 0px;
+    background-color:  rgb(66, 3, 241);
+    background: linear-gradient(to top, rgb(47, 2, 170) , rgb(20, 163, 230));
+    color: white;
+}
+
+#trainTableH{
+
+    border-spacing: 2px;
+    border-collapse: initial;
+}
+#trainTable{
+    border-spacing: 2px;
+    border-collapse: initial;
+    max-height: 160px;
+    overflow: auto;
+}
+tr{
+    height: 20px;
+
+}
+.tnum{
+    width: 10%;
+    padding: 8px;
+}
+.tnum1{
+    width: 10%;
+    padding: 8px;
+}
+.tname{
+    width: 30%;
+    padding: 8px;
+}
+.tname1{
+    width: 32%;
+    padding: 8px;
+}
+.tdest{
+    width: 20%;
+    padding: 8px;
+}
+.tdest1{
+    width: 22%;
+    padding: 8px;
+}
+.tfreq{
+    width: 12%;
+    padding: 8px;
+}
+.tfreq1{
+    width: 14%;
+    padding: 8px;
+}
+.tarr{
+    width: 12%;
+    padding: 8px;
+}
+.tarr1{
+    width: 13%;
+    padding: 8px;
+
+}
+.taway{
+    width: 12%;
+    padding: 8px;
+}
+.taway1{
+    width: 12%;
+    padding: 8px;
+    /* text-align: right; */
+
+}
+
+.entryWindow{
+    border: rgb(66, 3, 241);
+    border-color:  rgb(66, 3, 241);
+    border-style: solid;
+    padding: 0 0px 10px 0px;
+    border-radius: 4px;
+}
+
+.form-group{
+    padding: 0 10px 0 10px;
+    margin-bottom: 0px;
+    display: flex;
+}
+
+.form-Label{
+    width: 200px;
+}
+.form-control{
+    width: 700px;
+}
+
+.caseConversion{
+    text-transform: capitalize;
+}
+#trainNum{
+    width: 80px;
+}
+#trainName{
+    width: 500px;
+}
+#trainDestination{
+    width: 600px;
+}
+#trainFirstStart{
+    width: 120px;
+}
+#trainFrequency{
+    width: 80px;
+}
+.btndiv{
+    padding: 5px 0 0 10px;
+    margin: 0px;
+}
+
+#entryTitle{
+    color: white;
+    background-color:  rgb(66, 3, 241);
+    background: linear-gradient(to top, rgb(47, 2, 170) ,rgb(20, 163, 230));
+}
+#entryTitle h3{
+margin-top: 0px;
+height: 35px;
+font-size: 20px;
+}
+
+
+.btn-primary{
+    width: 120px;
+    height: 35px;
+    background-color: rgb(66, 3, 241);
+    background: linear-gradient(to top, rgb(66, 3, 241) , rgb(20, 163, 230));
+    align-content: center;
+    text-align: center;
+}
+
+#clearTrainBtn{
+    float: right;
+    margin-right: 10px;
+}
