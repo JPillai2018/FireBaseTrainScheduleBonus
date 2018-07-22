@@ -13,6 +13,6 @@
 // 11.Display a message once record is added, modified and deleted.
 // 13.I need to check for duplicate record- Idea is to try to find a match with added key (just like we did for Update/Delete search). If found throw an error message and skip addition logic.
 // 12.This application refreshes the data on screen every 60 seconds. 
-// 13.Any updates or deletes will be reflected immediately or within 60 seconds since last refresh.  
+// 13.Any updates or deletes will be reflected immediately or within 120 seconds(2 Minutes) since last refresh.  
 // 14.A few more enhancements are to be done such as
 // 15.What if I don't find a match in when I query? 

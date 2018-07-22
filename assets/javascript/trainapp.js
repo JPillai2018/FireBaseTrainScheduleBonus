@@ -33,7 +33,7 @@ $(document).ready(function(){
   // Initialize firebase configuration
   firebase.initializeApp(config);
 
-  timeInt = setInterval(refreshData, 30000);
+  timeInt = setInterval(refreshData, 120000);
   
   //refreshData();
   // Define firebase datbase
