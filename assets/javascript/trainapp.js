@@ -11,11 +11,16 @@
 // 9. I could not make refresh after successfully deleting the record.
 // 10.A few more enhancements required are validation messages when try to add a  duplicate record.
 // 11.Display a message once record is added, modified and deleted.
-// 13. I need to check for duplicate record- Idea is to try to find a match with added key (just like we did for Update/Delete search). If found throw an error message and skip addition logic.
-// 12.I don't know how to refresh the screen/table from entire content of the database when one record is deleted or modified.
-// 13. May be by force triggerring an event listener - I DON'T KNOW!!!!!!!!!!!!
+// 13.I need to check for duplicate record- Idea is to try to find a match with added key (just like we did for Update/Delete search). If found throw an error message and skip addition logic.
+// 12.This application refreshes the data on screen every 60 seconds. 
+// 13.Any updates or deletes will be reflected immediately or within 60 seconds since last refresh.  
+// 14.A few more enhancements are to be done such as
+// 15.What if I don't find a match in when I query? 
+
 
 // Initialize Firebase
+var timeInt = 0;
+var timecount = 0;
 $(document).ready(function(){
   var config = {
     apiKey: "AIzaSyCXYmiPC33RnNfI8Y5wCuLeu424Y1gYyYU",
@@ -27,7 +32,10 @@ $(document).ready(function(){
   };
   // Initialize firebase configuration
   firebase.initializeApp(config);
+
+  timeInt = setInterval(refreshData, 30000);
   
+  //refreshData();
   // Define firebase datbase
   var database = firebase.database();
   
@@ -117,9 +125,10 @@ $(document).ready(function(){
     var trainNum = $("#trainNum").val().trim();
     var firebaseRef = firebase.database().ref();
     var query = firebaseRef.orderByChild('num').equalTo(trainNum);
-    var query2 = firebaseRef.orderByChild('num').equalTo('****');
     var trainName = $("#trainName").val().trim();
+    trainName = toTitleCase(trainName);
     var destination = $("#trainDestination").val().trim();
+    destination = toTitleCase(destination);
     var firstTrain = moment($("#trainFirstStart").val().trim(), "HH:mm").format("HH:mm");
     var frequency = $("#trainFrequency").val().trim();
     // Locate the correct child based on matching key value. Once we locate the key, we update the data.
@@ -132,7 +141,13 @@ $(document).ready(function(){
         
       });
     })
+    // How do i find out if there is no match?
     //database.ref().child(key).remove();  
+    $("#trainNum").val("");
+    $("#trainName").val("");
+    $("#trainDestination").val("");
+    $("#trainFirstStart").val("00:00");
+    $("#trainFrequency").val("");
     return false;
   });
   // Firebase Eventlistener for Child_Changed
@@ -157,9 +172,29 @@ $(document).ready(function(){
     // Formatting time to next train in minutes
     var nxTrain = moment().add(minToTrain, "minutes").format("HH:mm");
     // Dynamically creating a table
-    $("#trainTable>tbody").append("<tr><td class='tnum1'>" + trainNum + "</td><td class='tname1'>" + trainName + "</td><td class='tdest1'>" + destination + "</td><td class='tfreq1'>" + frequency + "</td><td class='tarr1'>" + nxTrain + "</td><td>" + minToTrain + "</td></tr>");
-    $("#trainTable>tbody").attr({"class": "tablebody "});
 
+    //firebase.initializeApp();
+    
+    // var evt = new Event('build');
+    // elem.addEventListener('build');
+    // elem.dispatchEvent(evt);
+    var event = document.createEvent('Event');
+    event.initEvent('build', true, true);
+    //elem.addEventListener('build', function(e){
+
+    }, false);
+    //elem.dispatchEvent(event);
+    //console.log("After...");
+    // $("#trainTable>tbody").append("<tr><td class='tnum1'>" + trainNum + "</td><td class='tname1'>" + trainName + "</td><td class='tdest1'>" + destination + "</td><td class='tfreq1'>" + frequency + "</td><td class='tarr1'>" + nxTrain + "</td><td>" + minToTrain + "</td></tr>");
+    // $("#trainTable>tbody").attr({"class": "tablebody "});
+
+    // Clearinf Form data after update
+    // clears all the text-boxes
+    $("#trainNum").val("");
+    $("#trainName").val("");
+    $("#trainDestination").val("");
+    $("#trainFirstStart").val("00:00");
+    $("#trainFrequency").val("");
     });
 
   // Table Row Delete Section *************************************************************************************
@@ -235,10 +270,8 @@ $(document).ready(function(){
     }
     return word.join(' ');
   }
-  
-})
+
   function validateForm(f1, f2, f3, f4, f5){
-    alert("Hi");
     var firstTrain = $("#trainFirstStart").val().trim();
     var firstTrain = moment($("#trainFirstStart").val().trim(), "HH:mm").format("HH:mm");
     console.log("Validate TIme=" + firstTrain);
@@ -275,10 +308,75 @@ $(document).ready(function(){
   };
 
 
+  function refreshData(){
+    var firebaseRef = firebase.database().ref();
+    firebaseDB = firebase.database().ref();
+    firebaseDB.on('value', gotData, errData);
+    timecount++;
+    console.log("Refreshing....");
+  }
 
+function gotData(data){
+  //console.log(data.val());
+  var trains = data.val();
+  var dbKeys = Object.keys(trains);
   
+  //console.log("dbKeys = " + dbKeys);
+  $("#trainTable tbody tr").remove();
 
+  for (var i = 0; i < dbKeys.length; i++){
+    var k = dbKeys[i];
+    //console.log("Key = " + k);
+    var tNum = trains[k].num;
+    var tName = trains[k].name;
+    var tDestination = trains[k].place;
+    var tFirstTrain = trains[k].ftrain;
+    var tFreq = trains[k].freq;
+    
+    //console.log ("Record-" + i + "= " + k.freq + " Train Num= " + k.num + " Train Name= " + k.name + " Place= " + k.place);
+    // Now re-loading the table with refreshed data
+        // first Train pushed back to make sure it comes before current time
+        var firstTimeConverted = moment(tFirstTrain, "HH:mm");
+        var currentTime = moment().format("HH:mm");
+        // Calculate the difference between currentTime and First Train Time in minutes.
+        var timeDiff = moment().diff(moment(firstTimeConverted), "minutes");
+        // Find Remainder of the time left after deviding the difference with frequency
+        var timeRemainder = parseFloat(timeDiff) % parseFloat(tFreq);
+        // The remainder should be adde to current time (or subtract from frequency) to get the time till next time relative to currenttrain,we store it in a variable
+        var minToTrain = parseFloat(tFreq) - parseFloat(timeRemainder);
+        //minToTrain = minToTrain.format("HH:mm");
+        // Formatting time to next train in minutes
+        var nxTrain = moment().add(minToTrain, "minutes").format("HH:mm");
+        // Dynamically creating a table
+        $("#trainTable>tbody").append("<tr><td class='tnum1'>" + tNum + "</td><td class='tname1'>" + tName + "</td><td class='tdest1'>" + tDestination + "</td><td class='tfreq1'>" + tFreq + "</td><td class='tarr1'>" + nxTrain + "</td><td>" + minToTrain + "</td></tr>");
+        $("#trainTable>tbody").attr({"class": "tablebody "});
+        $("#trainNum").val("");
+        $("#trainName").val("");
+        $("#trainDestination").val("");
+        $("#trainFirstStart").val("00:00");
+        $("#trainFrequency").val("");
+  }
+}
+  
+function errData(err){
+  console.log("Error!!!");
+  console.log(err);
+}
 
+function formatTNum(evt, fld){
+  var key = window.event ? event.keyCode : event.which; 
+  var chr = String.fromCharCode(key);
+  var vld = ['0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
+
+  if (vld.indexOf(chr) >= 0){
+    return true;
+  }
+  else{
+    var fldLength = fld.value.length;
+    fld.value = fld.value.substring(0, fldLength-1);
+    return false;
+  }
+};
 
 
 
